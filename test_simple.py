@@ -32,6 +32,8 @@ def parse_args():
     parser.add_argument('--model_name', type=str,
                         help='name of a pretrained model to use',
                         choices=[
+                            "stereo_192x64",
+                            "stereo_96x64",
                             "mono_640x192",
                             "stereo_640x192",
                             "mono+stereo_640x192",
