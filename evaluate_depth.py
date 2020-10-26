@@ -220,6 +220,11 @@ def evaluate(opt):
 
     mean_errors = np.array(errors).mean(0)
 
+    if opt.sort > 0:
+        rmse_error = errors[:,2]
+        hard_img_idx = np.argsort(rmse_error)[:opt.sort]
+        print("Sorted rmse ids: ", hard_img_idx)
+
     print("\n  " + ("{:>8} | " * 7).format("abs_rel", "sq_rel", "rmse", "rmse_log", "a1", "a2", "a3"))
     print(("&{: 8.3f}  " * 7).format(*mean_errors.tolist()) + "\\\\")
     print("\n-> Done!")

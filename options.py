@@ -202,6 +202,10 @@ class MonodepthOptions:
                                  help="if set will perform the flipping post processing "
                                       "from the original monodepth paper",
                                  action="store_true")
+        self.parser.add_argument("--sort",
+                                 help="tries to sort by error gives names of hard images",
+                                 type=int,
+                                 default=0)
 
     def parse(self):
         self.options = self.parser.parse_args()
