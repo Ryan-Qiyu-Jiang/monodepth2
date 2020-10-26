@@ -55,9 +55,11 @@ class DepthDecoder(nn.Module):
         x = input_features[-1]
         for i in range(4, -1, -1):
             x = self.convs[("upconv", i, 0)](x)
-            x = [upsample(x)]
             if self.use_skips and i > 0:
-                x += [input_features[i - 1]]
+                x = [input_features[i - 1], 
+                     F.interpolate(x, size=input_features[i - 1].shape[2:], mode="nearest")]
+            else:
+                x = [upsample(x)]
             x = torch.cat(x, 1)
             x = self.convs[("upconv", i, 1)](x)
             if i in self.scales:
