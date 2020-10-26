@@ -22,6 +22,7 @@ class DepthDecoder(nn.Module):
         self.use_skips = use_skips
         self.upsample_mode = 'nearest'
         self.scales = scales
+        self.use_sigmoid = use_sigmoid
 
         self.num_ch_enc = num_ch_enc
         self.num_ch_dec = np.array([16, 32, 64, 128, 256])
@@ -60,7 +61,7 @@ class DepthDecoder(nn.Module):
             x = torch.cat(x, 1)
             x = self.convs[("upconv", i, 1)](x)
             if i in self.scales:
-                if use_sigmoid:
+                if self.use_sigmoid:
                     self.outputs[("disp", i)] = self.sigmoid(self.convs[("dispconv", i)](x))
                 else:
                     self.outputs[("disp", i)] = self.convs[("dispconv", i)](x)
