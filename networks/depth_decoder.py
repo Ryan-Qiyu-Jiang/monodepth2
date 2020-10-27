@@ -25,7 +25,7 @@ class DepthDecoder(nn.Module):
         self.use_sigmoid = use_sigmoid
 
         self.num_ch_enc = num_ch_enc
-        self.num_ch_dec = np.array([16, 32, 64, 128, 256])
+        self.num_ch_dec = np.array([64, 100, 128, 200, 256])
 
         # decoder
         self.convs = OrderedDict()
