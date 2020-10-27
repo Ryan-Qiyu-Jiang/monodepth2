@@ -69,3 +69,35 @@ class DepthDecoder(nn.Module):
                     self.outputs[("disp", i)] = self.convs[("dispconv", i)](x)
 
         return self.outputs
+
+class DebugDepthDecoder(DepthDecoder):
+    def __init__(self, num_ch_enc, scales=range(4), num_output_channels=1, use_skips=True, use_sigmoid=True):
+        super(DebugDepthDecoder, self).__init__(num_ch_enc, scales, num_output_channels, use_skips, use_sigmoid)
+
+    def forward(self, input_features):
+        self.outputs = {}
+
+        # decoder
+        x = input_features[-1]
+        for i in range(4, -1, -1):
+            x1 = self.convs[("upconv", i, 0)](x)
+            if self.use_skips and i > 0:
+                x2 = [input_features[i - 1], 
+                     F.interpolate(x1, size=input_features[i - 1].shape[2:], mode="nearest")]
+            else:
+                x2 = [upsample(x1)]
+            x3 = torch.cat(x2, 1)
+            x4 = self.convs[("upconv", i, 1)](x3)
+
+            self.outputs[("debug_0", i)] = x
+            self.outputs[("debug_1", i)] = x1
+            self.outputs[("debug_2", i)] = x3
+            self.outputs[("debug_4", i)] = x4
+
+            if i in self.scales:
+                if self.use_sigmoid:
+                    self.outputs[("disp", i)] = self.sigmoid(self.convs[("dispconv", i)](x4))
+                else:
+                    self.outputs[("disp", i)] = self.convs[("dispconv", i)](x4)
+
+        return self.outputs
