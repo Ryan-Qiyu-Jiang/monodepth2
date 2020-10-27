@@ -99,5 +99,5 @@ class DebugDepthDecoder(DepthDecoder):
                     self.outputs[("disp", i)] = self.sigmoid(self.convs[("dispconv", i)](x4))
                 else:
                     self.outputs[("disp", i)] = self.convs[("dispconv", i)](x4)
-
+            x = x4
         return self.outputs
